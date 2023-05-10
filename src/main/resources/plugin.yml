@@ -1,0 +1,10 @@
+name: IconAtNight
+version: '${version}'
+main: cx.rain.mc.icon_at_night.IconAtNight
+api-version: 1.13
+prefix: IconAtNight
+authors: [ qyl27, MeowCraftMC ]
+description: A bukkit plugin for showing different icon at night in game.
+website: https://github.com/qyl27/IconAtNight
+softdepend: []
+commands: {}

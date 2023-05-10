@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'com.rikonardo.papermake' version '1.0.6'
+}
+
+group = 'cx.rain.mc'
+version = '1.0.0'
+archivesBaseName = 'icon-at-night'
+
+sourceCompatibility = JavaVersion.toVersion(17)
+targetCompatibility = JavaVersion.toVersion(17)
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'spigotmc-repo'
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+        name = 'CodeMC NMS repo'
+        url = 'https://repo.codemc.io/repository/nms/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+}
+
+dependencies {
+    implementation 'org.jetbrains:annotations:24.0.0'
+    compileOnly 'org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT'
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+devServer {
+}
