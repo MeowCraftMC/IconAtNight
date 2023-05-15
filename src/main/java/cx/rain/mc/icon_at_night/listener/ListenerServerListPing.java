@@ -1,6 +1,7 @@
 package cx.rain.mc.icon_at_night.listener;
 
 import cx.rain.mc.icon_at_night.IconAtNight;
+import cx.rain.mc.icon_at_night.manager.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,30 +9,51 @@ import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.util.CachedServerIcon;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ListenerServerListPing implements Listener {
     public final CachedServerIcon iconDay;
     public final CachedServerIcon iconNight;
 
+    private final ConfigManager configManager;
+
+    private Map<InetAddress, Boolean> lastRequest = new HashMap<>();
+
     public ListenerServerListPing(IconAtNight plugin) {
+        configManager = IconAtNight.getInstance().getConfigManager();
+
         var dataFolder = plugin.getDataFolder();
-        var iconFileDay = new File(dataFolder, "server-icon-day.png");
-        var iconFileNight = new File(dataFolder, "server-icon-night.png");
+        var iconFileDay = new File(dataFolder, configManager.getIconDay());
+        var iconFileNight = new File(dataFolder, configManager.getIconNight());
         try {
             iconDay = Bukkit.loadServerIcon(iconFileDay);
             iconNight = Bukkit.loadServerIcon(iconFileNight);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException(ex);
         }
     }
 
     @EventHandler
     public void onServerListPing(ServerListPingEvent event) {
-        var world = Bukkit.getWorld("world");
-        if (world != null && world.getTime() > 13000) {
+        var world = Bukkit.getWorld(configManager.getWorldName());
+
+        boolean isNight = world != null && world.getTime() > 13000;
+
+        if (lastRequest.containsKey(event.getAddress())) {
+            var lastReq = lastRequest.get(event.getAddress());
+            if (lastReq == isNight) {
+                return;
+            }
+        }
+
+        if (isNight) {
             event.setServerIcon(iconNight);
         } else {
             event.setServerIcon(iconDay);
         }
+        lastRequest.put(event.getAddress(), isNight);
     }
 }
