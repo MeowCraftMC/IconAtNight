@@ -23,4 +23,8 @@ public class ConfigManager {
     public String getIconNight() {
         return config.getString("icon-night", "server-icon-night.png");
     }
+
+    public boolean getCacheEnabled() {
+        return config.getBoolean("cache-enabled", true);
+    }
 }

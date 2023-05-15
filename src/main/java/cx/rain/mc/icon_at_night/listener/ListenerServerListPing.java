@@ -42,7 +42,7 @@ public class ListenerServerListPing implements Listener {
 
         boolean isNight = world != null && world.getTime() > 13000;
 
-        if (lastRequest.containsKey(event.getAddress())) {
+        if (configManager.getCacheEnabled() && lastRequest.containsKey(event.getAddress())) {
             var lastReq = lastRequest.get(event.getAddress());
             if (lastReq == isNight) {
                 return;
