@@ -14,8 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ListenerServerListPing implements Listener {
-    public final CachedServerIcon iconDay;
-    public final CachedServerIcon iconNight;
+    private CachedServerIcon iconDay;
+    private CachedServerIcon iconNight;
 
     private final ConfigManager configManager;
 
@@ -32,7 +32,8 @@ public class ListenerServerListPing implements Listener {
             iconNight = Bukkit.loadServerIcon(iconFileNight);
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new RuntimeException(ex);
+            iconDay = Bukkit.getServerIcon();
+            iconNight = Bukkit.getServerIcon();
         }
     }
 
